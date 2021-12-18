@@ -1,0 +1,11 @@
+<h1>People#index</h1>
+
+
+
+<% @people.each do |person| %>
+  <p>
+    <%= person.name %>
+    <%= link_to 'Edit', edit_person_path(person) %>
+    <%= link_to 'Delete', person_path(person), data: {method: :delete}%>
+  </p>
+<% end %>
