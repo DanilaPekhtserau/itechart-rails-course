@@ -1,0 +1,8 @@
+<h1>New person</h1>
+
+
+<%= form_with model: @person do |f| %>
+  <%= f.text_field :name, required: true, minlength: 2, placeholder: "Имя персоны" %>
+
+  <%= f.submit "Update person!"%>
+<% end %>
