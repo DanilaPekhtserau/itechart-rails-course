@@ -35,7 +35,7 @@ class PeopleController < ApplicationController
   def destroy
     @person = Person.find_by id: params[:id]
     if Person.all.length == 1
-      flash[:notice] = 'НЕЛЬЗЯ УДАЛЯТЬ ДИБИЛ'
+      flash[:notice] = 'Нельзя удалять последнюю персону.'
     else
       @person.destroy
     end

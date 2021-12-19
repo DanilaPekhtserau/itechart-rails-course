@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   private
 
   def user_logged_in?
-    !current_user.nil?
+    current_user.present?
   end
 
   def redirect_to_sign_up
