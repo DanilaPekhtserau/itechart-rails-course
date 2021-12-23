@@ -1,0 +1,8 @@
+<h1>New person</h1>
+
+<%= form_with model: @category do |f| %>
+  <%= f.text_field :title, required: true, minlength: 2, placeholder: "Название категории" %>
+  Дебит<%= f.check_box :debit%>
+  <%= f.collection_select(:id, current_user.people.order(:name),:id,:name, {:prompt => nil}, {:multiple => true})%>
+  <%= f.submit "Submit category!"%>
+<% end %>
