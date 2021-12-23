@@ -1,0 +1,14 @@
+<h1>Categories#index</h1>
+
+<%= link_to 'New', categories_new_path() %>
+
+<% @categories.each do |category| %>
+  <p>
+    <%= category.title %>
+    <%= category.debit %>
+    <%= category.people.length %>
+    <%= link_to 'Edit', edit_category_path(category) %>
+    <%= link_to 'Delete', category_path(category), data: {method: :delete}%>
+
+  </p>
+<% end %>

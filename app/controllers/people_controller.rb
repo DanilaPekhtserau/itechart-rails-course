@@ -19,12 +19,12 @@ class PeopleController < ApplicationController
   end
 
   def edit
-    @person = Person.find_by id: params[:id]
+    @person = Person.find_by(id: params[:id])
   end
 
   # @todo refactor
   def update
-    @person = Person.find_by id: params[:id]
+    @person = Person.find_by(id: params[:id])
     if @person.update(person_params)
       redirect_to people_path
     else
@@ -33,8 +33,8 @@ class PeopleController < ApplicationController
   end
 
   def destroy
-    @person = Person.find_by id: params[:id]
-    if Person.all.length == 1
+    @person = Person.find_by(id: params[:id])
+    if current_user.people.count == 1
       flash[:notice] = 'Нельзя удалять последнюю персону.'
     else
       @person.destroy
