@@ -1,0 +1,13 @@
+<h1>Transactions#index</h1>
+<%= link_to 'New', transactions_new_path() %>
+
+<% @transactions.each do |transaction| %>
+  <p>
+    money_amount = <%= transaction.money_amount %><br>
+    person = <%= transaction.person_category.person.name %><br>
+    category = <%= transaction.person_category.category.title %> debit  <%= transaction.person_category.category.debit %><br>
+    <%= link_to 'Edit', edit_transaction_path(transaction) %>
+    <%= link_to 'Delete', transaction_path(transaction), data: {method: :delete}%>
+    <br>
+  </p>
+<% end %>

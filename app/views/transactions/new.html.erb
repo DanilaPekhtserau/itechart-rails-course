@@ -1,0 +1,7 @@
+<h1>Transactions#new</h1>
+<%= form_with model: @transaction do |f| %>
+  <%= f.text_field :money_amount, required: true, placeholder: "How much" %>
+  <%= f.collection_select(:person_category_id, PersonCategory.where(person_id: current_user.people), :id, :id) %>
+  Important <%= f.check_box :important%>
+  <%= f.submit "Submit transaction!"%>
+<% end %>

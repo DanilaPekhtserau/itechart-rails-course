@@ -7,6 +7,22 @@ class CategoriesController < ApplicationController
     @categories = current_user.people.collect(&:categories).flatten.uniq
   end
 
+
+  def details_init
+    @category = Category.find_by(id: params[:id])
+    @first_date = Date.today.beginning_of_month
+    @second_date = Date.today
+    @transactions = transactions_filtering(@first_date, @second_date, Transaction.where(person_category_id: PersonCategory.where(category_id: @category.id)))
+    render :details
+  end
+
+  def details
+    @category = Category.find_by(id: params[:id])
+    @first_date = Date.parse(params[:first_date])
+    @second_date = Date.parse(params[:second_date])
+    @transactions = transactions_filtering(@first_date, @second_date, Transaction.where(person_category_id: PersonCategory.where(category_id: @category.id)))
+  end
+
   def new
     @category = Category.new
   end
@@ -14,7 +30,7 @@ class CategoriesController < ApplicationController
   def create
     @category = Category.new(category_params)
     params[:category][:id].each do |person_id|
-      @category.people << Person.find(person_id) if person_id != ''
+      @category.people << Person.find(person_id) if !person_id.empty?
     end
     if @category.save
       redirect_to categories_path
@@ -44,6 +60,12 @@ class CategoriesController < ApplicationController
       return
     end
     redirect_to categories_path if @category.destroy
+  end
+
+  private
+
+  def transactions_filtering(start_date, end_date, transactions)
+    [] + transactions.where(created_at: start_date.to_date..end_date.to_date)
   end
 
   def category_params

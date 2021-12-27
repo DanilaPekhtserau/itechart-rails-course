@@ -29,7 +29,7 @@ RSpec.describe Category, type: :model do
     expect(category.save).to eq(false)
   end
 
-  it 'can\'t create category with > 16 chars title' do
+  it 'can\'t create category with > 12 chars title' do
     category = Category.new(title: 'qwertyuiopasdfghjklmbvcxz')
     category.people << person
     expect(category.save).to eq(false)
