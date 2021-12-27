@@ -3,5 +3,5 @@
 class PersonCategory < ApplicationRecord
   belongs_to :person
   belongs_to :category
-  has_many :money_transactions
+  has_many :money_transactions, dependent: nil
 end
