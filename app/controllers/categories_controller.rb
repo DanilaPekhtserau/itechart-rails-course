@@ -19,8 +19,13 @@ class CategoriesController < ApplicationController
 
   def details
     @category = Category.find_by(id: params[:id])
-    @first_date = Date.parse(params[:first_date])
-    @second_date = Date.parse(params[:second_date])
+    if params[:first_date].present? && params[:second_date].present?
+      @first_date = Date.parse(params[:first_date])
+      @second_date = Date.parse(params[:second_date])
+    else
+      flash[:notice] = 'Укажите начальную и конечную дату'
+      details_init
+    end
     @transactions = transactions_filtering(@first_date, @second_date, current_category_transactions)
   end
 
@@ -76,7 +81,7 @@ class CategoriesController < ApplicationController
     if params[:only_with_important].present? && params[:only_with_important] == '1'
       result = result.where(important: true)
     end
-    [] + result
+    result || []
   end
   # rubocop:enable Metrics/AbcSize
 
