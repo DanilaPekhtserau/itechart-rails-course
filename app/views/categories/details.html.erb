@@ -1,0 +1,28 @@
+<h1>Category#details</h1>
+
+title <%= @category.title %>
+debit <%= @category.debit %>
+people.length <%= @category.people.length %>
+f date <%= @first_date %>
+s date <%= @second_date %>
+<%= form_with local: true do |f| %>
+  <%= f.date_field :first_date%>
+  <%= f.date_field :second_date%>
+  Только с заметками <%= f.check_box :only_with_note%>
+  Только с важным <%= f.check_box :only_with_important%>
+  <%= f.submit "Submit!"%>
+<% end %>
+
+
+<% @transactions.each do |transaction| %>
+  <p>
+    money_amount = <%= transaction.money_amount %><br>
+    person = <%= transaction.person_category.person.name %><br>
+    category = <%= transaction.person_category.category.title %> debit  <%= transaction.person_category.category.debit %><br>
+    important = <%= transaction.important %> <br>
+    <% if transaction.note_id.present? %>
+      note = <%= transaction.note.body %><br>
+    <% end %>
+  </p>
+<% end %>
+

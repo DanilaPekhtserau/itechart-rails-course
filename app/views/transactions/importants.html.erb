@@ -1,0 +1,11 @@
+<% @transactions.each do |transaction| %>
+  <p>
+    money_amount = <%= transaction.money_amount %><br>
+    person = <%= transaction.person_category.person.name %><br>
+    category = <%= transaction.person_category.category.title %> debit  <%= transaction.person_category.category.debit %><br>
+    <% if transaction.note_id.present? %>
+      note = <%= transaction.note.body %>
+    <% end %>
+    <br>
+  </p>
+<% end %>
