@@ -19,7 +19,13 @@ class CategoriesController < ApplicationController
 
   def details
     @category = Category.find_by(id: params[:id])
-    valid_date(params)
+    if params[:first_date].present? && params[:second_date].present?
+      @first_date = Date.parse(params[:first_date])
+      @second_date = Date.parse(params[:second_date])
+    else
+      flash[:notice] = 'Укажите начальную и конечную дату'
+      details_init
+    end
     @transactions = transactions_filtering(@first_date, @second_date, current_category_transactions)
   end
 
@@ -63,16 +69,6 @@ class CategoriesController < ApplicationController
   end
 
   private
-
-  def valid_date(params)
-    if params[:first_date].present? && params[:second_date].present?
-      @first_date = Date.parse(params[:first_date])
-      @second_date = Date.parse(params[:second_date])
-    else
-      flash[:notice] = 'Укажите начальную и конечную дату'
-      details_init
-    end
-  end
 
   def current_category_transactions
     Transaction.where(person_category_id: PersonCategory.where(category_id: @category.id))
