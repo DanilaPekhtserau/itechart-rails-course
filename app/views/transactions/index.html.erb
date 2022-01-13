@@ -1,7 +1,5 @@
 <h1>Transactions#index</h1>
 <%= link_to 'New', transactions_new_path() %>
-<%= link_to 'Important', transactions_importants_path() %>
-<%= link_to 'Details', transactions_details_path() %>
 
 <% @transactions.each do |transaction| %>
   <p>
@@ -9,7 +7,7 @@
     person = <%= transaction.person_category.person.name %><br>
     category = <%= transaction.person_category.category.title %> debit  <%= transaction.person_category.category.debit %><br>
     <% if transaction.note_id.present? %>
-      note = <%= transaction.note.body %><br>
+      note = <%= transaction.note.body %>
     <% end %>
     <%= link_to 'Edit', edit_transaction_path(transaction) %>
     <%= link_to 'Delete', transaction_path(transaction), data: {method: :delete}%>

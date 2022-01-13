@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class TransactionsController < ApplicationController
   def index
     current_user_person_categories = PersonCategory.where(person_id: current_user.people)
@@ -9,28 +8,6 @@ class TransactionsController < ApplicationController
 
   def importants
     @transactions = Transaction.where(important: true)
-  end
-
-  # rubocop:disable  Rails/Date
-  def details_init
-    @first_date = Date.today.beginning_of_month
-    @second_date = Date.tomorrow
-    categories, transacions = categories_transactions_declaration
-    @debit_transactions = get_debit_transactions(categories, transacions)
-    @credit_transactions = get_credit_transactions(categories, transacions)
-    @debit_chart_data = get_debit_chart_data(categories, transacions)
-    @credit_chart_data = get_credit_chart_data(categories, transacions)
-    render :details
-  end
-
-  # rubocop:enable  Rails/Date
-  def details
-    valid_date(params)
-    categories, transacions = categories_transactions_declaration
-    @debit_transactions = get_debit_transactions(categories, transacions)
-    @credit_transactions = get_credit_transactions(categories, transacions)
-    @debit_chart_data = get_debit_chart_data(categories, transacions)
-    @credit_chart_data = get_credit_chart_data(categories, transacions)
   end
 
   def new
@@ -70,22 +47,6 @@ class TransactionsController < ApplicationController
 
   private
 
-  def categories_transactions_declaration
-    categories = current_user.people.collect(&:categories).flatten.uniq
-    transacions = transactions_filtering(@first_date, @second_date, Transaction.all)
-    [categories, transacions]
-  end
-
-  def valid_date(params)
-    if params[:first_date].present? && params[:second_date].present?
-      @first_date = Date.parse(params[:first_date])
-      @second_date = Date.parse(params[:second_date])
-    else
-      flash[:notice] = 'Укажите начальную и конечную дату'
-      details_init
-    end
-  end
-
   def transaction_params
     params.require(:transaction).permit(:money_amount, :important, :person_category_id)
   end
@@ -105,42 +66,4 @@ class TransactionsController < ApplicationController
   def edit_note
     @transaction.note.update(note_params) if note_params[:body].present?
   end
-
-  def transactions_filtering(start_date, end_date, transactions)
-    result = transactions.where(created_at: start_date.to_date..end_date.to_date)
-    result || []
-  end
-
-  def get_debit_transactions(categories, transactions)
-    result = []
-    categories.select(&:debit).each do |category|
-      result += transactions.where(person_category_id: category.person_categories)
-    end
-    result
-  end
-
-  def get_credit_transactions(categories, transactions)
-    result = []
-    categories.reject(&:debit).each do |category|
-      result += transactions.where(person_category_id: category.person_categories)
-    end
-    result
-  end
-
-  def get_debit_chart_data(categories, transactions)
-    data = []
-    categories.select(&:debit).each do |category|
-      data += [[category.title, transactions.where(person_category_id: category.person_categories).sum(:money_amount)]]
-    end
-    data
-  end
-
-  def get_credit_chart_data(categories, transactions)
-    data = []
-    categories.reject(&:debit).each do |category|
-      data += [[category.title, transactions.where(person_category_id: category.person_categories).sum(:money_amount)]]
-    end
-    data
-  end
 end
-# rubocop:enable Metrics/ClassLength

@@ -19,8 +19,6 @@ Rails.application.routes.draw do
   get '/transactions/new', to: 'transactions#new'
   post '/transactions', to: 'transactions#create'
   get '/transactions/importants', to: 'transactions#importants'
-  get '/transactions/details', to: 'transactions#details_init', as: 'transactions_details_init'
-  post '/transactions/details', to: 'transactions#details', as: 'transactions_details'
 
   match "/404", to: "errors#not_found", via: :all
 
