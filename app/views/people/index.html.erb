@@ -1,11 +1,11 @@
-<h1>People#index</h1>
+<h1>People</h1>
 
-
+<%= link_to 'New', people_new_path() %>
 
 <% @people.each do |person| %>
   <p>
-    <%= person.name %>
+    name: "<%= person.name %>"<br>
     <%= link_to 'Edit', edit_person_path(person) %>
     <%= link_to 'Delete', person_path(person), data: {method: :delete}%>
-  </p>
+  </br>
 <% end %>

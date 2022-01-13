@@ -1,8 +1,10 @@
 <h1>Edit category</h1>
 
+<%= link_to 'Back', "/categories" %>
 
+<p>
 <%= form_with model: @category do |f| %>
-  <%= f.text_field :title, required: true, minlength: 2, placeholder: "Имя категории" %>
-  <%= f.check_box :debit%>
-  <%= f.submit "Update category!"%>
+  <%= f.text_field :title, required: true, minlength: 2, placeholder: "Category title" %>
+  debit <%= f.check_box :debit%>
+  <%= f.submit "Update category"%>
 <% end %>

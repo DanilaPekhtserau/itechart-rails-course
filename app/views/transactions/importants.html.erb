@@ -1,12 +1,15 @@
-<%= link_to 'Back', transactions_path() %>
+<h1>Important transactions</h1>
+
+<%= link_to 'Back', "/transactions" %>
+
 <% @transactions.each do |transaction| %>
   <p>
-    money_amount = <%= transaction.money_amount %><br>
-    person = <%= transaction.person_category.person.name %><br>
-    category = <%= transaction.person_category.category.title %> debit  <%= transaction.person_category.category.debit %><br>
+    money amount: <%= transaction.money_amount %><br>
+    person: "<%= transaction.person_category.person.name %>"<br>
+    category: "<%= transaction.person_category.category.title %>"<br>
+    debit: <%= transaction.person_category.category.debit %><br>
     <% if transaction.note_id.present? %>
-      note = <%= transaction.note.body %>
+      note: "<%= transaction.note.body %>"<br>
     <% end %>
-    <br>
   </p>
 <% end %>
