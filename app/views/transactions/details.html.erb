@@ -1,0 +1,96 @@
+<head>
+  <!--Load the AJAX API-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawDebitChart);
+      google.charts.setOnLoadCallback(drawCreditChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawDebitChart() {
+
+          // Create the data table.
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Categories');
+          data.addColumn('number', 'Money');
+          data.addRows(JSON.parse('<%= @debit_chart_data.to_json.html_safe %>'));
+
+          // Set chart options
+          var options = {'title':'Debit',
+              'width':400,
+              'height':300};
+
+          // Instantiate and draw our chart, passing in some options.
+          var chart = new google.visualization.PieChart(document.getElementById('Debit_chart'));
+          chart.draw(data, options);
+
+      }
+      function drawCreditChart() {
+
+          // Create the data table.
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Categories');
+          data.addColumn('number', 'Money');
+          data.addRows(JSON.parse('<%= @credit_chart_data.to_json.html_safe %>'));
+
+          // Set chart options
+          var options = {'title':'Credit',
+              'width':400,
+              'height':300};
+
+          // Instantiate and draw our chart, passing in some options.
+          var chart = new google.visualization.PieChart(document.getElementById('Credit_chart'));
+          chart.draw(data, options);
+      }
+  </script>
+</head>
+<body>
+<div style="display: flex">
+  <div>
+    <div id="Debit_chart"></div>
+    <% @debit_transactions.each do |transaction| %>
+      <p>
+        money_amount = <%= transaction.money_amount %><br>
+        person = <%= transaction.person_category.person.name %><br>
+        category = <%= transaction.person_category.category.title %> debit  <%= transaction.person_category.category.debit %><br>
+        <% if transaction.note_id.present? %>
+          note = <%= transaction.note.body %><br>
+        <% end %>
+        <br>
+      </p>
+    <% end %>
+    <% if @debit_transactions == [] %>
+      No data<br>
+    <% end %>
+  </div>
+  <div>
+    <div id="Credit_chart">No data</div>
+    <% @credit_transactions.each do |transaction| %>
+      <p>
+        money_amount = <%= transaction.money_amount %><br>
+        person = <%= transaction.person_category.person.name %><br>
+        category = <%= transaction.person_category.category.title %> debit  <%= transaction.person_category.category.debit %><br>
+        <% if transaction.note_id.present? %>
+          note = <%= transaction.note.body %><br>
+        <% end %>
+        <br>
+      </p>
+    <% end %>
+    <% if @credit_transactions == [] %>
+      No data<br>
+    <% end %>
+  </div>
+  <div>
+    <%= form_with local: true do |f| %>
+      <%= f.date_field :first_date%>
+      <%= f.date_field :second_date%>
+      <%= f.submit "Submit!"%>
+    <% end %>
+  </div>
+</div>
+</body>
