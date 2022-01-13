@@ -2,6 +2,8 @@
 
 # rubocop:disable Metrics/ClassLength
 class TransactionsController < ApplicationController
+  before_action :redirect_to_sign_up
+  before_action :require_needed_signed_user, only: %i[edit destroy update]
   def index
     current_user_person_categories = PersonCategory.where(person_id: current_user.people)
     @transactions = Transaction.where(person_category_id: current_user_person_categories)
@@ -41,10 +43,10 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(transaction_params)
     add_note
     if @transaction.save
-      flash[:notice] = 'Супер-класс, молодец'
       redirect_to transactions_path
     else
       render :new
+      flash[:notice] = 'Ошибка записи.'
     end
   end
 
@@ -59,6 +61,7 @@ class TransactionsController < ApplicationController
       redirect_to transactions_path
     else
       render :edit
+      flash[:notice] = 'Ошибка записи.'
     end
   end
 
@@ -126,5 +129,13 @@ class TransactionsController < ApplicationController
     end
     data
   end
+
+  def require_needed_signed_user
+    transaction = Transaction.find(params[:id])
+    return if current_user == transaction.person_category.person.user
+
+    redirect_to root_path
+  end
+
 end
 # rubocop:enable Metrics/ClassLength
