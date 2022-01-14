@@ -2,7 +2,7 @@
 
 class CategoriesController < ApplicationController
   before_action :redirect_to_sign_up
-  before_action :require_needed_signed_user, only: %i[edit destroy update]
+  before_action :require_needed_signed_user, only: %i[edit destroy update details_init details]
   def index
     @categories = current_user.people.collect(&:categories).flatten.uniq
   end
@@ -35,7 +35,7 @@ class CategoriesController < ApplicationController
     if @category.save
       redirect_to categories_path
     else
-      flash[:notice] = 'Не удалось сохранить категорию'
+      flash[:notice] = 'Ошибка записи.'
     end
   end
 
@@ -49,6 +49,7 @@ class CategoriesController < ApplicationController
       redirect_to categories_path
     else
       render :edit
+      flash[:notice] = 'Ошибка записи.'
     end
   end
 

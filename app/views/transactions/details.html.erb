@@ -50,6 +50,10 @@
   </script>
 </head>
 <body>
+<h1>Transactions details</h1>
+
+<%= link_to 'Back', "/transactions" %>
+
 <div style="display: flex">
   <div>
     <div id="Debit_chart"></div>
@@ -87,9 +91,9 @@
   </div>
   <div>
     <%= form_with local: true do |f| %>
-      <%= f.date_field :first_date%>
-      <%= f.date_field :second_date%>
-      <%= f.submit "Submit!"%>
+      <%= f.date_field :first_date, value: @first_date%>
+      <%= f.date_field :second_date, value: @second_date%>
+      <%= f.submit "Submit"%>
     <% end %>
   </div>
 </div>

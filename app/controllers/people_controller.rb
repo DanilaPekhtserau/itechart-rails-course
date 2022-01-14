@@ -22,13 +22,13 @@ class PeopleController < ApplicationController
     @person = Person.find_by(id: params[:id])
   end
 
-  # @todo refactor
   def update
     @person = Person.find_by(id: params[:id])
     if @person.update(person_params)
       redirect_to people_path
     else
       render :edit
+      flash[:notice] = 'Ошибка записи.'
     end
   end
 

@@ -1,18 +1,19 @@
-<h1>Category#details</h1>
+<h1>Category details</h1>
 
-title <%= @category.title %>
-debit <%= @category.debit %>
-people.length <%= @category.people.length %>
-f date <%= @first_date %>
-s date <%= @second_date %>
+title: "<%= @category.title %>"<br>
+debit: <%= @category.debit %><br>
+owners amount: <%= @category.people.length %><br>
+first date: <%= @first_date %><br>
+second date: <%= @second_date %><br>
 <%= form_with local: true do |f| %>
-  <%= f.date_field :first_date%>
-  <%= f.date_field :second_date%>
-  Только с заметками <%= f.check_box :only_with_note%>
-  Только с важным <%= f.check_box :only_with_important%>
-  <%= f.submit "Submit!"%>
+  <%= f.date_field :first_date, value: @first_date%>
+  <%= f.date_field :second_date, value: @second_date%>
+  Only with note <%= f.check_box :only_with_note%>
+  Only important <%= f.check_box :only_with_important%>
+  <%= f.submit "Submit"%>
 <% end %>
 
+<h2>Results:</h2>
 
 <% @transactions.each do |transaction| %>
   <p>

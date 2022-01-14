@@ -2,6 +2,8 @@
 
 # rubocop:disable Metrics/ClassLength
 class TransactionsController < ApplicationController
+  before_action :redirect_to_sign_up
+  before_action :require_needed_signed_user, only: %i[edit destroy update]
   def index
     current_user_person_categories = PersonCategory.where(person_id: current_user.people)
     @transactions = Transaction.where(person_category_id: current_user_person_categories)
@@ -18,7 +20,7 @@ class TransactionsController < ApplicationController
     categories, transacions = categories_transactions_declaration
     @debit_transactions = get_transactions_by_type(categories, transacions, true)
     @credit_transactions = get_transactions_by_type(categories, transacions, false)
-    @debit_chart_data = get_chart_data_by_type(categories, transacions,true)
+    @debit_chart_data = get_chart_data_by_type(categories, transacions, true)
     @credit_chart_data = get_chart_data_by_type(categories, transacions, false)
     render :details
   end
@@ -29,7 +31,7 @@ class TransactionsController < ApplicationController
     categories, transacions = categories_transactions_declaration
     @debit_transactions = get_transactions_by_type(categories, transacions, true)
     @credit_transactions = get_transactions_by_type(categories, transacions, false)
-    @debit_chart_data = get_chart_data_by_type(categories, transacions,true)
+    @debit_chart_data = get_chart_data_by_type(categories, transacions, true)
     @credit_chart_data = get_chart_data_by_type(categories, transacions, false)
   end
 
@@ -41,10 +43,10 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(transaction_params)
     add_note
     if @transaction.save
-      flash[:notice] = 'Супер-класс, молодец'
       redirect_to transactions_path
     else
       render :new
+      flash[:notice] = 'Ошибка записи.'
     end
   end
 
@@ -59,6 +61,7 @@ class TransactionsController < ApplicationController
       redirect_to transactions_path
     else
       render :edit
+      flash[:notice] = 'Ошибка записи.'
     end
   end
 
@@ -111,20 +114,27 @@ class TransactionsController < ApplicationController
     result || []
   end
 
-  def get_transactions_by_type(categories, transactions, debit = true)
+  def get_transactions_by_type(categories, transactions, debit: true)
     result = []
-    categories.select{ |item| item.debit == debit }.each do |category|
+    categories.select { |item| item.debit == debit }.each do |category|
       result += transactions.where(person_category_id: category.person_categories)
     end
     result
   end
 
-  def get_chart_data_by_type(categories, transactions, debit = true)
+  def get_chart_data_by_type(categories, transactions, debit: true)
     data = []
-    categories.select{ |item| item.debit == debit }.each do |category|
+    categories.select { |item| item.debit == debit }.each do |category|
       data += [[category.title, transactions.where(person_category_id: category.person_categories).sum(:money_amount)]]
     end
     data
+  end
+
+  def require_needed_signed_user
+    transaction = Transaction.find(params[:id])
+    return if current_user == transaction.person_category.person.user
+
+    redirect_to root_path
   end
 end
 # rubocop:enable Metrics/ClassLength
