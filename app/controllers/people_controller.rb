@@ -22,7 +22,6 @@ class PeopleController < ApplicationController
     @person = Person.find_by(id: params[:id])
   end
 
-
   def update
     @person = Person.find_by(id: params[:id])
     if @person.update(person_params)

@@ -20,7 +20,7 @@ class TransactionsController < ApplicationController
     categories, transacions = categories_transactions_declaration
     @debit_transactions = get_transactions_by_type(categories, transacions, true)
     @credit_transactions = get_transactions_by_type(categories, transacions, false)
-    @debit_chart_data = get_chart_data_by_type(categories, transacions,true)
+    @debit_chart_data = get_chart_data_by_type(categories, transacions, true)
     @credit_chart_data = get_chart_data_by_type(categories, transacions, false)
     render :details
   end
@@ -31,7 +31,7 @@ class TransactionsController < ApplicationController
     categories, transacions = categories_transactions_declaration
     @debit_transactions = get_transactions_by_type(categories, transacions, true)
     @credit_transactions = get_transactions_by_type(categories, transacions, false)
-    @debit_chart_data = get_chart_data_by_type(categories, transacions,true)
+    @debit_chart_data = get_chart_data_by_type(categories, transacions, true)
     @credit_chart_data = get_chart_data_by_type(categories, transacions, false)
   end
 
@@ -114,17 +114,17 @@ class TransactionsController < ApplicationController
     result || []
   end
 
-  def get_transactions_by_type(categories, transactions, debit = true)
+  def get_transactions_by_type(categories, transactions, debit: true)
     result = []
-    categories.select{ |item| item.debit == debit }.each do |category|
+    categories.select { |item| item.debit == debit }.each do |category|
       result += transactions.where(person_category_id: category.person_categories)
     end
     result
   end
 
-  def get_chart_data_by_type(categories, transactions, debit = true)
+  def get_chart_data_by_type(categories, transactions, debit: true)
     data = []
-    categories.select{ |item| item.debit == debit }.each do |category|
+    categories.select { |item| item.debit == debit }.each do |category|
       data += [[category.title, transactions.where(person_category_id: category.person_categories).sum(:money_amount)]]
     end
     data
@@ -136,6 +136,5 @@ class TransactionsController < ApplicationController
 
     redirect_to root_path
   end
-
 end
 # rubocop:enable Metrics/ClassLength
